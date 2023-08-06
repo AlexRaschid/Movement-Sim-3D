@@ -8,7 +8,10 @@ public class PlayerMovement : MonoBehaviour
     //Why is HEader structured like this
     //To for Input varible Headers in Unity
     [Header("Movement")]
-    public float moveSpeed;
+    private float moveSpeed;
+    public float walkSpeed;
+    public float sprintSpeed;
+
 
     public float groundDrag;
 
@@ -20,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
-
+    public KeyCode sprintKey = KeyCode.LeftShift;
 
 
     [Header("Ground Check")]
@@ -37,6 +40,17 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
 
     Rigidbody rb;
+
+
+    public MovementState state;
+    //What is enum?
+    public enum MovementState 
+    {
+        walking,
+        sprinting,
+        air
+    }
+
 
     private void Start()
     {
@@ -55,6 +69,7 @@ public class PlayerMovement : MonoBehaviour
         
         MyInput();
         SpeedControl();
+        StateHandler();
 
         //Handle Drag
         if(grounded)
@@ -83,6 +98,30 @@ public class PlayerMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
     }
+
+    private void StateHandler()
+    {
+        //Mode - sprinting
+        if(grounded && Input.GetKey(sprintKey))
+        {
+            state = MovementState.sprinting;
+            moveSpeed = sprintSpeed;
+        }
+
+        //Mode - walking
+        else if(grounded)
+        {
+            state = MovementState.walking;
+            moveSpeed = walkSpeed;
+        }
+
+        //Mode - Air
+        else
+        {
+            state = MovementState.air;
+        }
+    }
+
 
     private void MovePlayer()
     {
