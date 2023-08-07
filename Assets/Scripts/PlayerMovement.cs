@@ -138,14 +138,14 @@ public class PlayerMovement : MonoBehaviour
         
 
         //Mode - walking
-        else if(grounded)
+        if(grounded)
         {
             state = MovementState.walking;
             moveSpeed = walkSpeed;
         }
         
         //Mode - sprinting
-        else if(grounded && Input.GetKey(sprintKey))
+        if(grounded && Input.GetKey(sprintKey))
         {
             state = MovementState.sprinting;
             moveSpeed = sprintSpeed;
