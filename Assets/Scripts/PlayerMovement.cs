@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float groundDrag;
 
+    [Header("Jumping")]
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
@@ -65,10 +66,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        readyToJump = true;
+        
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-
+        readyToJump = true;
+        
         startYScale = transform.localScale.y;
     }
 
@@ -77,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Performs ground check by "shooting a raycast down"
         //what is raycast? what do the numbers '0.5f + 0.2f' represent?
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.1f, whatIsGround);
         
         MyInput();
         SpeedControl();
@@ -176,11 +178,11 @@ public class PlayerMovement : MonoBehaviour
         //on ground
         //What is ForceMode class?
         if(grounded)
-            rb.AddForce(10f * moveSpeed * moveDirection.normalized, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
 
         //in air
         else if(!grounded)
-            rb.AddForce(10f * airMultiplier * moveSpeed * moveDirection.normalized, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
             
         // turn gravity off while on slope
@@ -213,9 +215,10 @@ public class PlayerMovement : MonoBehaviour
         exitingSlope = true;
         //reset y velocity to 0 to jjump at same height
         //what is 0f?
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+        //rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        //rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         
     }
 
