@@ -101,6 +101,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Handle Drag
         if(grounded)
+        
             rb.drag = groundDrag;
         else
             rb.drag = 0;
@@ -152,7 +153,7 @@ public class PlayerMovement : MonoBehaviour
         
 
         //Mode - walking
-        if(grounded)
+        else if(grounded)
         {
             state = MovementState.walking;
             moveSpeed = walkSpeed;
@@ -250,6 +251,7 @@ public class PlayerMovement : MonoBehaviour
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             return angle < maxSlopeAngle && angle != 0;
+            
         }
 
         return false;
@@ -257,6 +259,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 GetSlopeMoveDirection()
     {
+        //Debug.Log("Debug log getSlopeMoveDirection"+Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized);
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 }
