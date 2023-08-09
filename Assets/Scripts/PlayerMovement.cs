@@ -2,6 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+    /*
+        Bug Fix / Feature Todo's:
+            b-sliding along the middle of a ramp/slope
+            b-faster movement speed on slope
+            b-not being able to jump running down slope
+
+            b-when landing from a jump, small bounce back on the landing
+
+            b-player 'sticks' to walls/side of objects when applying movement key
+
+            f-proper crouch jumping (jump + crouch)
+            b-inital jump when crouched has less height, every jump after retains regular jump height
+    */
+
 public class PlayerMovement : MonoBehaviour
 {
 
