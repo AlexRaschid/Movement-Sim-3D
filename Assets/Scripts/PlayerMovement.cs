@@ -98,7 +98,10 @@ public class PlayerMovement : MonoBehaviour
     {
 
         //Performs ground check by "shooting a raycast down"
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        if(Input.GetKey(crouchKey))
+            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 * 0.5f + 0.2f, whatIsGround);
+        else    
+            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         
         MyInput();
         SpeedControl();
@@ -240,7 +243,8 @@ public class PlayerMovement : MonoBehaviour
         if(OnSlope() && !exitingSlope)
         {
             rb.AddForce(20f * moveSpeed * GetSlopeMoveDirection(moveDirection), ForceMode.Force);
-
+            
+            
             if(rb.velocity.y > 0)
             {
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force); 
@@ -263,6 +267,7 @@ public class PlayerMovement : MonoBehaviour
     private void SpeedControl()
     {
         //Limiting speed on slope
+        
         if(OnSlope() && !exitingSlope)
         {
             if(rb.velocity.magnitude > moveSpeed)
