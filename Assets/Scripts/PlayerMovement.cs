@@ -99,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
         //Performs ground check by "shooting a raycast down"
         if(Input.GetKey(crouchKey))
-            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight / 2 * 0.5f + 0.2f, whatIsGround);
+            grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * crouchYScale * 0.5f + 0.2f, whatIsGround);
         else    
             grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         
@@ -290,7 +290,11 @@ public class PlayerMovement : MonoBehaviour
     {
         exitingSlope = true;
         //reset y velocity to 0 to jjump at same height
-        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+        
+        if(Input.GetKey(crouchKey))
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce * (crouchYScale + 0.15f), rb.velocity.z);
+        else
+            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
     }
 
     private void ResetJump()
