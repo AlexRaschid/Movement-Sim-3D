@@ -1,21 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-    /*
-        Bug Fix / Feature Todo's:
-            b-sliding along the middle of a ramp/slope
-            b-faster movement speed on slope
-            b-not being able to jump running down slope
-
-            b-when landing from a jump, small bounce back on the landing
-
-            b-player 'sticks' to walls/side of objects when applying movement key
-
-            f-proper crouch jumping (jump + crouch)
-            b-inital jump when crouched has less height, every jump after retains regular jump height
-    */
-
 public class PlayerMovement : MonoBehaviour
 {
 
@@ -47,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
     public KeyCode sprintKey = KeyCode.LeftShift;
-    public KeyCode crouchKey = KeyCode.LeftControl;
+    public KeyCode crouchKey = KeyCode.C;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -97,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
 
-        //Performs ground check by "shooting a raycast down"
+        //Performs ground check by shooting a raycast down
         if(Input.GetKey(crouchKey))
             grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * crouchYScale * 0.5f + 0.2f, whatIsGround);
         else    
@@ -192,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //check if desiredMoveSpeed has changed drastically
-        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 4f && moveSpeed != 0)
+        if(Mathf.Abs(desiredMoveSpeed - lastDesiredMoveSpeed) > 3f && moveSpeed != 0)
         {
             StopAllCoroutines();
             StartCoroutine(SmoothlyLerpMoveSpeed());
@@ -244,20 +229,23 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.AddForce(20f * moveSpeed * GetSlopeMoveDirection(moveDirection), ForceMode.Force);
             
-            
+            //walking up/down
             if(rb.velocity.y > 0)
             {
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force); 
             }
         }
 
-        //on ground
+        //on slope and crouch jumping
+        else if(OnSlope() && Input.GetKey(crouchKey) && exitingSlope)
+            rb.AddForce(10f * moveSpeed * Vector3.down.normalized, ForceMode.Force);
+
         else if(grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+            rb.AddForce(10f * moveSpeed * moveDirection.normalized, ForceMode.Force);
 
         //in air
         else if(!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            rb.AddForce(10f * airMultiplier * moveSpeed * moveDirection.normalized, ForceMode.Force);
 
             
         // turn gravity off while on slope
