@@ -58,8 +58,13 @@ public class Sliding : MonoBehaviour
     {
         pm.sliding = true;
 
-        playerObj.localScale = new Vector3(transform.localScale.x, slideYScale, transform.localScale.z);
-        rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+
+        if(!Input.GetKey(pm.crouchKey))
+        {
+            transform.localScale = new Vector3(playerObj.localScale.x, pm.crouchYScale, playerObj.localScale.z);
+            rb.AddForce(Vector3.down * 10f, ForceMode.Impulse);  
+        }
+            
 
         slideTimer = maxSlideTime;
     }
@@ -90,7 +95,8 @@ public class Sliding : MonoBehaviour
     {
         pm.sliding = false;
         
-        playerObj.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        //playerObj.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
+        transform.localScale = new Vector3(playerObj.localScale.x, startYScale, playerObj.localScale.z);
     }
 
 
