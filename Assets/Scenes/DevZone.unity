@@ -598,12 +598,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a111f36a2f86f449fbae33937c3f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 7
-  sprintSpeed: 10
-  slideSpeed: 3.5
-  speedIncreaseMultiplier: 3
-  slopeIncreaseMultiplier: 3
-  groundDrag: 3
   jumpForce: 12
   jumpCooldown: 0.25
   airMultiplier: 0.4
@@ -618,10 +612,11 @@ MonoBehaviour:
     m_Bits: 128
   maxSlopeAngle: 70
   friction: 3
-  ground_accelerate: 25
-  max_velocity_ground: 35
-  air_accelerate: 9
-  max_velocity_air: 10
+  ground_accelerate: 30
+  max_velocity_ground: 40
+  air_accelerate: 2
+  max_velocity_air: 3
+  airControlForce: 2
   orientation: {fileID: 660643107}
   state: 0
   sliding: 0
