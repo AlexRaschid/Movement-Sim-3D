@@ -717,8 +717,8 @@ MonoBehaviour:
     m_Bits: 128
   maxSlopeAngle: 45
   friction: 3
-  ground_accelerate: 30
-  max_velocity_ground: 30
+  ground_accelerate: 50
+  max_velocity_ground: 7
   air_accelerate: 1
   max_velocity_air: 1.5
   airControlForce: 2
