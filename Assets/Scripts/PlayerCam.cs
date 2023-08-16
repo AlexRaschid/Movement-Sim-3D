@@ -15,6 +15,7 @@ public class PlayerCam : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = 144; //60, 144, 240, 360, infinite?
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         
