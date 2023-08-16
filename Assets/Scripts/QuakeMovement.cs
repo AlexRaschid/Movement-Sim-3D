@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 public class QuakeMovement : MonoBehaviour
 {
@@ -83,6 +84,7 @@ public class QuakeMovement : MonoBehaviour
     private void FixedUpdate()
     {
         MovePlayer();
+
     }
 
     private void MyInput()
@@ -148,15 +150,23 @@ public class QuakeMovement : MonoBehaviour
         if(OnSlope() && !exitingSlope)
         {
             //Debug.Log("SLOPE DETECTED!");
+            
             rb.velocity = MoveGround(GetSlopeMoveDirection(moveDirection), rb.velocity);
             
-            //walking up/down
-            if(rb.velocity.y > 0)
+            //creates consistent player velocity on slope
+            //TODO: This currently kills momentum on some bhop surfaces, fix this
+            //NOTE: When walking on the ground, velocity will get close to 7 but not reach (6.8)
+            //however when on slope, this sets the velocity straight to 7. Investigate why its not reaching closer to 7 in the first palce
+            if(rb.velocity.magnitude > max_velocity_ground)
             {
-                //rb.AddForce(Vector3.down * 80f, ForceMode.Force); 
+                rb.velocity = rb.velocity.normalized * max_velocity_ground; 
             }
+                
+            
+            //walking up/down
         }
 
+        //walking
         else if(grounded)
             rb.velocity = MoveGround(moveDirection, rb.velocity);
 
@@ -166,6 +176,7 @@ public class QuakeMovement : MonoBehaviour
 
             
         // turn gravity off while on slope
+        
         rb.useGravity = !OnSlope();
     }
 
@@ -179,6 +190,7 @@ public class QuakeMovement : MonoBehaviour
         float speed = prevVelocity.magnitude;
         if (speed != 0) // To avoid divide by zero errors
         {
+            //Debug.Log("Friction!!");
             float drop = speed * friction * Time.fixedDeltaTime;
             prevVelocity *= Mathf.Max(speed - drop, 0) / speed; // Scale the velocity based on friction.
         }
@@ -191,12 +203,15 @@ public class QuakeMovement : MonoBehaviour
     // Unite these for better readability/performance
     private Vector3 Accelerate(Vector3 accelDir, Vector3 prevVelocity, float accelerate, float max_velocity)
     {
+        
         float projVel = Vector3.Dot(prevVelocity, accelDir.normalized); // Vector projection of Current velocity onto accelDir.
         float accelVel = accelerate * Time.fixedDeltaTime; // Accelerated velocity in direction of movment
         
         // If necessary, truncate the accelerated velocity so the vector projection does not exceed max_velocity
+        
         if(projVel + accelVel > max_velocity)
             accelVel = max_velocity - projVel;
+
         
         return prevVelocity + accelDir.normalized * accelVel;
     }
