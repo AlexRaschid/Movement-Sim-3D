@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Search;
 using UnityEngine;
+using TMPro;
 public class QuakeMovement : MonoBehaviour
 {
 
@@ -39,6 +40,9 @@ public class QuakeMovement : MonoBehaviour
     public float max_velocity_air;
     public float airControlForce;
 
+    [Header("UI Manager")]
+    private UIManager uiManager;
+
     public Transform orientation;
 
     float horizontalInput;
@@ -61,6 +65,8 @@ public class QuakeMovement : MonoBehaviour
 
     private void Start()
     {
+        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         readyToJump = true;
@@ -79,6 +85,8 @@ public class QuakeMovement : MonoBehaviour
         
         MyInput();
         StateHandler();
+
+        uiManager.UpdateVelocityTxt(rb.velocity.magnitude.ToString("F3"));
     }
 
     private void FixedUpdate()
