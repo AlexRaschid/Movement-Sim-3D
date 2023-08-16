@@ -152,15 +152,12 @@ public class QuakeMovement : MonoBehaviour
             //Debug.Log("SLOPE DETECTED!");
             
             rb.velocity = MoveGround(GetSlopeMoveDirection(moveDirection), rb.velocity);
-            
+            rb.drag = 2;
             //creates consistent player velocity on slope
             //TODO: This currently kills momentum on some bhop surfaces, fix this
             //NOTE: When walking on the ground, velocity will get close to 7 but not reach (6.8)
             //however when on slope, this sets the velocity straight to 7. Investigate why its not reaching closer to 7 in the first palce
-            if(rb.velocity.magnitude > max_velocity_ground)
-            {
-                rb.velocity = rb.velocity.normalized * max_velocity_ground; 
-            }
+            
                 
             
             //walking up/down
@@ -168,7 +165,11 @@ public class QuakeMovement : MonoBehaviour
 
         //walking
         else if(grounded)
-            rb.velocity = MoveGround(moveDirection, rb.velocity);
+        {
+            rb.velocity = MoveGround(moveDirection.normalized, rb.velocity);
+            rb.drag = 0;
+        }
+            //rb.velocity = MoveGround(moveDirection.normalized, rb.velocity);
 
         //in air
         else if(!grounded)
@@ -204,16 +205,21 @@ public class QuakeMovement : MonoBehaviour
     private Vector3 Accelerate(Vector3 accelDir, Vector3 prevVelocity, float accelerate, float max_velocity)
     {
         
-        float projVel = Vector3.Dot(prevVelocity, accelDir.normalized); // Vector projection of Current velocity onto accelDir.
+        float projVel = Vector3.Dot(prevVelocity, accelDir); // Vector projection of Current velocity onto accelDir.
         float accelVel = accelerate * Time.fixedDeltaTime; // Accelerated velocity in direction of movment
         
         // If necessary, truncate the accelerated velocity so the vector projection does not exceed max_velocity
-        
+        //Debug.Log(projVel + accelVel);
+        Debug.Log(projVel);
         if(projVel + accelVel > max_velocity)
+        {
             accelVel = max_velocity - projVel;
+            //accelVel = accelVel * //Mathf.FloorToInt(accelVel);
+        }
+            //accelVel = max_velocity - projVel;
 
         
-        return prevVelocity + accelDir.normalized * accelVel;
+        return prevVelocity + accelDir * accelVel;
     }
 
     private void MoveAir(Vector3 accelDir, Vector3 prevVelocity)
