@@ -142,20 +142,23 @@ public class QuakeMovement : MonoBehaviour
     private void MovePlayer()
     {
         //calc movement direction
-        
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         //on slope
         if(OnSlope() && !exitingSlope)
         {
+            //Debug.Log("SLOPE DETECTED!");
+            rb.velocity = MoveGround(GetSlopeMoveDirection(moveDirection), rb.velocity);
+            
+            //walking up/down
             if(rb.velocity.y > 0)
             {
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force); 
+                //rb.AddForce(Vector3.down * 80f, ForceMode.Force); 
             }
         }
 
         else if(grounded)
-            rb.velocity = MoveGround(moveDirection.normalized, rb.velocity);
+            rb.velocity = MoveGround(moveDirection, rb.velocity);
 
         //in air
         else if(!grounded)
@@ -170,20 +173,6 @@ public class QuakeMovement : MonoBehaviour
     // prevVelocity: The current velocity of the player, before any additional calculations
     // accelerate: The server-defined player acceleration value
     // max_velocity: The server-defined maximum player velocity (this is not strictly adhered to due to strafejumping)
-    private Vector3 Accelerate(Vector3 accelDir, Vector3 prevVelocity, float accelerate, float max_velocity)
-    {
-        float projVel = Vector3.Dot(prevVelocity, accelDir); // Vector projection of Current velocity onto accelDir.
-        float accelVel = accelerate * Time.fixedDeltaTime; // Accelerated velocity in direction of movment
-        
-        // If necessary, truncate the accelerated velocity so the vector projection does not exceed max_velocity
-        if(projVel + accelVel > max_velocity)
-            accelVel = max_velocity - projVel;
-        
-    
-
-        return prevVelocity + accelDir * accelVel;
-    }
-
     private Vector3 MoveGround(Vector3 accelDir, Vector3 prevVelocity)
     {
         // Apply Friction
@@ -198,9 +187,22 @@ public class QuakeMovement : MonoBehaviour
         return Accelerate(accelDir, prevVelocity, ground_accelerate, max_velocity_ground);
     }
 
+    //TODO: Unoptimized Acceleration calculations, currently doing it seperately: for ground and air. 
+    // Unite these for better readability/performance
+    private Vector3 Accelerate(Vector3 accelDir, Vector3 prevVelocity, float accelerate, float max_velocity)
+    {
+        float projVel = Vector3.Dot(prevVelocity, accelDir.normalized); // Vector projection of Current velocity onto accelDir.
+        float accelVel = accelerate * Time.fixedDeltaTime; // Accelerated velocity in direction of movment
+        
+        // If necessary, truncate the accelerated velocity so the vector projection does not exceed max_velocity
+        if(projVel + accelVel > max_velocity)
+            accelVel = max_velocity - projVel;
+        
+        return prevVelocity + accelDir.normalized * accelVel;
+    }
+
     private void MoveAir(Vector3 accelDir, Vector3 prevVelocity)
     {
-        //Vector3 accelDirNew = Accelerate(accelDir, prevVelocity, air_accelerate, max_velocity_air);
         // project the velocity onto the movevector
         Vector3 projVel = Vector3.Project(prevVelocity, accelDir);
 
@@ -224,19 +226,14 @@ public class QuakeMovement : MonoBehaviour
             }
 
             // Apply the force
-            Debug.Log("AirStrafed? " + (isAway));
-            GetComponent<Rigidbody>().AddForce(vc, ForceMode.VelocityChange);
+            rb.AddForce(vc, ForceMode.VelocityChange);
         }
         
-        
-        // air_accelerate and max_velocity_air are server-defined movement variables
-        //Accelerate(accelDir, prevVelocity, ground_accelerate, max_velocity_ground);
     }
     private void Jump()
     {
         exitingSlope = true;
         //reset y velocity to 0 to jjump at same height
-        
         if(Input.GetKey(crouchKey))
             rb.velocity = new Vector3(rb.velocity.x, jumpForce * (crouchYScale + 0.15f), rb.velocity.z);
         else
