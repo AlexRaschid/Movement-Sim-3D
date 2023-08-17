@@ -786,12 +786,12 @@ GameObject:
   m_Component:
   - component: {fileID: 699716821}
   - component: {fileID: 699716820}
-  - component: {fileID: 699716822}
-  - component: {fileID: 699716823}
-  - component: {fileID: 699716824}
+  - component: {fileID: 699716825}
+  - component: {fileID: 699716827}
+  - component: {fileID: 699716826}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -841,41 +841,26 @@ Transform:
   - {fileID: 2077035237}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &699716822
+--- !u!114 &699716825
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699716819}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4438a96978d7b849a68089efa1fcab3, type: 3}
+  m_Script: {fileID: 11500000, guid: 7ae1671f7ccf3384f8a60fc25e7cf6fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 7
-  sprintSpeed: 10
-  slideSpeed: 20
-  speedIncreaseMultiplier: 1.2
-  slopeIncreaseMultiplier: 2
-  groundDrag: 5
-  jumpForce: 12
-  jumpCooldown: 0.25
-  airMultiplier: 0.4
-  crouchSpeed: 3.5
-  crouchYScale: 0.5
   jumpKey: 32
   sprintKey: 304
   crouchKey: 99
-  playerHeight: 2
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 128
-  maxSlopeAngle: 75
+  quakeMovement: {fileID: 699716827}
+  playerSliding: {fileID: 699716826}
   orientation: {fileID: 660643107}
   state: 0
-  sliding: 0
---- !u!114 &699716823
+--- !u!114 &699716826
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -893,7 +878,7 @@ MonoBehaviour:
   slideForce: 200
   slideYScale: 0.5
   slideKey: 306
---- !u!114 &699716824
+--- !u!114 &699716827
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -905,16 +890,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a111f36a2f86f449fbae33937c3f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 660643107}
-  state: 0
   jumpForce: 12
   jumpCooldown: 0.25
   airMultiplier: 0.4
   crouchSpeed: 0
   crouchYScale: 0
-  jumpKey: 32
-  sprintKey: 304
-  crouchKey: 99
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2
