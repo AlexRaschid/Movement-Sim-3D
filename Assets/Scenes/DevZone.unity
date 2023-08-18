@@ -856,7 +856,7 @@ MonoBehaviour:
   jumpKey: 32
   sprintKey: 304
   crouchKey: 99
-  quakeMovement: {fileID: 699716827}
+  playerMovement: {fileID: 699716827}
   playerSliding: {fileID: 699716826}
   orientation: {fileID: 660643107}
   state: 0
@@ -904,8 +904,9 @@ MonoBehaviour:
   max_velocity_ground: 7
   air_accelerate: 1
   max_velocity_air: 1.5
-  airControlForce: 2
+  airControlForce: 7
   maxSlopeAngle: 45
+  canJumpCast: 0
   sliding: 0
 --- !u!1 &705507993
 GameObject:

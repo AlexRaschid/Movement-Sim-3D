@@ -68,7 +68,7 @@ public class PlayerMain : MonoBehaviour
         //walking
         else if(playerMovement.GetGrounded())
         {
-            rb.velocity = playerMovement.MoveGround(moveDirection.normalized, rb.velocity);
+            rb.velocity = playerMovement.MoveGround(moveDirection, rb.velocity);
         }
             //rb.velocity = MoveGround(moveDirection.normalized, rb.velocity);
 
@@ -87,7 +87,7 @@ public class PlayerMain : MonoBehaviour
         
 
         //when to jump
-        if(Input.GetKey(jumpKey) && playerMovement.GetReadyToJump() && playerMovement.GetGrounded())
+        if(Input.GetKey(jumpKey) && playerMovement.GetReadyToJump() && playerMovement.canJumpCast )//&& playerMovement.canJumpCast playerMovement.GetGrounded()
         {
             playerMovement.SetReadyToJump(false);
 
