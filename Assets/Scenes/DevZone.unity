@@ -893,8 +893,8 @@ MonoBehaviour:
   jumpForce: 12
   jumpCooldown: 0.25
   airMultiplier: 0.4
-  crouchSpeed: 0
-  crouchYScale: 0
+  crouchSpeed: 3.5
+  crouchYScale: 0.5
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2

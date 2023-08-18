@@ -65,12 +65,11 @@ public class PlayerMovement : MonoBehaviour
         startYScale = transform.localScale.y;
     }
 
-
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        canJumpCast = Physics.CheckSphere(transform.position - new Vector3(0,playerHeight/2,0) , 0.5f, whatIsGround);
+        canJumpCast = Physics.CheckSphere(transform.position - new Vector3(0,playerHeight/2,0) , 0.2f, whatIsGround);
         //Debug.Log(canJumpCast);
-        ObeyGravity();
+        
         uiManager.UpdateVelocityTxt(rb.velocity.magnitude.ToString("F3"));
     }
 
@@ -109,7 +108,7 @@ public class PlayerMovement : MonoBehaviour
         return false;
     }
 
-    private void ObeyGravity()
+    public void ObeyGravity()
     {
         if(grounded == false)
         {
@@ -123,6 +122,11 @@ public class PlayerMovement : MonoBehaviour
             This means whatever surface we're grounded on will be 
             effectively the same as standing on a perfectly horizontal 
             surface. Ergo, no sliding will occur. */
+            Debug.Log(currentGravity);
+            Debug.Log(-groundNormal);
+            Debug.Log(Physics.gravity.magnitude);
+            Debug.Log(-groundNormal * Physics.gravity.magnitude);
+
             currentGravity = -groundNormal * Physics.gravity.magnitude;
         }
         rb.AddForce(currentGravity, ForceMode.Acceleration);
@@ -155,7 +159,7 @@ public class PlayerMovement : MonoBehaviour
         //Debug.Log(prevVelocity);
         float projVel = Vector3.Dot(prevVelocity, accelDir); // Vector projection of Current velocity onto accelDir.
         float accelVel = accelerate * Time.fixedDeltaTime; // Accelerated velocity in direction of movment
-        Debug.Log(accelVel);
+        //Debug.Log(accelVel);
         // If necessary, truncate the accelerated velocity so the vector projection does not exceed max_velocity
         //Debug.Log(projVel + accelVel);
         if(projVel + accelVel > max_velocity)
@@ -199,6 +203,20 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(vc, ForceMode.VelocityChange);
         }
         
+    }
+
+    public void Crouch()
+    {
+        transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+    }
+
+    public void Stand()
+    {
+        rb.AddForce(groundNormal * Physics.gravity.magnitude*2, ForceMode.Force);
+        transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        //stand up calculations
+        
+
     }
     public void Jump()
     {
@@ -254,5 +272,10 @@ public class PlayerMovement : MonoBehaviour
     public bool GetExitingSlope()
     {
         return exitingSlope;
+    }
+
+    public float GetStartYScale()
+    {
+        return startYScale;
     }
 }
