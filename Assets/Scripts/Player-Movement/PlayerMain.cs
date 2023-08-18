@@ -39,12 +39,20 @@ public class PlayerMain : MonoBehaviour
         playerSliding = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerSliding>();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    
+    void Update()
     {
-        MovePlayer();
+        
         MyInput();
         StateHandler();
+
+    }
+
+    //FixedUpdate should be used instead of Update when dealing with Rigidbody.
+    void FixedUpdate()
+    {
+        playerMovement.ObeyGravity();
+        MovePlayer();
 
         if(playerMovement.sliding)
             playerSliding.SlidingMovement();
@@ -84,7 +92,6 @@ public class PlayerMain : MonoBehaviour
 
     private void MyInput()
     {
-        
 
         //when to jump
         if(Input.GetKey(jumpKey) && playerMovement.GetReadyToJump() && playerMovement.canJumpCast )//&& playerMovement.canJumpCast playerMovement.GetGrounded()
@@ -100,9 +107,10 @@ public class PlayerMain : MonoBehaviour
         if(Input.GetKeyDown(crouchKey))
         {
             Debug.Log("Perform Crouch Down!");
+            playerMovement.Crouch();
             //ToDo: Re Implement Crouching
+            
             /*
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
             */
         }
@@ -111,6 +119,8 @@ public class PlayerMain : MonoBehaviour
         if(Input.GetKeyUp(crouchKey))
         {
             Debug.Log("Perform Crouch Up!");
+            playerMovement.Stand();
+            
             //transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
     }
