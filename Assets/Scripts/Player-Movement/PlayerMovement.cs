@@ -60,14 +60,13 @@ public class PlayerMovement : MonoBehaviour
 
 
         uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        readyToJump = true;
+        readyToJump = false;
         
         startYScale = transform.localScale.y;
     }
 
     void FixedUpdate()
     {
-        canJumpCast = Physics.CheckSphere(transform.position - new Vector3(0,playerHeight/2,0) , 0.2f, whatIsGround);
         //Debug.Log(canJumpCast);
         
         uiManager.UpdateVelocityTxt(rb.velocity.magnitude.ToString("F3"));
@@ -243,6 +242,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void SetCanJumpCast()
+    {
+        canJumpCast = Physics.CheckSphere(transform.position - new Vector3(0,playerHeight/2,0) , 0.2f, whatIsGround);
     }
     
     public Vector3 GetSlopeMoveDirection(Vector3 direction)

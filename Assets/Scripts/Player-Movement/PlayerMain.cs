@@ -24,8 +24,9 @@ public class PlayerMain : MonoBehaviour
     public PlayerState state;
     public enum PlayerState 
     {
+        standing,
         walking,
-        sprinting,
+        jump,
         crouching,
         sliding,
         air
@@ -42,12 +43,13 @@ public class PlayerMain : MonoBehaviour
     
     void Update()
     {
+        playerMovement.SetCanJumpCast();
+        StateHandler();
         //Best practice indicates to keep input data in update, which also includes the camera
         horizontalInput = Input.GetAxisRaw("Horizontal"); //a+d
         verticalInput = Input.GetAxisRaw("Vertical"); //w+s
         
         
-        StateHandler();
 
     }
 
@@ -56,13 +58,80 @@ public class PlayerMain : MonoBehaviour
     {
         playerMovement.ObeyGravity();
         MovePlayer();
+        MyInput();
         //Standards indicate you track input in Update(),
         //however in this case you are currently calculating playerMovement with Crouch, Jump, Stand
         //so right now its alright, but seperate these to keep the convention
-        MyInput();
+        
 
         if(playerMovement.sliding)
             playerSliding.SlidingMovement();
+    }
+    private void StateHandler()
+    {
+        //Mode - Standing
+        if(playerMovement.GetGrounded() && rb.velocity.magnitude == 0)
+        {
+            state = PlayerState.standing;
+        }
+        //Mode - Crouching
+        else if(Input.GetKey(crouchKey))
+        {
+            state = PlayerState.crouching;
+        }
+        //Mode - Jumping
+        else if(Input.GetKey(jumpKey))
+        {
+            state = PlayerState.jump;
+            playerMovement.SetReadyToJump(true);
+        }
+        //Mode - Walking
+        else if(playerMovement.GetGrounded() && rb.velocity.magnitude != 0)
+        {
+            state = PlayerState.walking;
+        }
+        //Mode - Air
+        else
+        {
+            state = PlayerState.air;
+        }
+    }
+
+    private void MyInput()
+    {
+
+        //when to jump
+        if(state == PlayerState.jump && 
+            playerMovement.GetReadyToJump() && 
+            playerMovement.canJumpCast )//&& playerMovement.canJumpCast playerMovement.GetGrounded()
+        {
+            playerMovement.SetReadyToJump(false);
+
+            playerMovement.Jump();
+
+            playerMovement.Invoke(nameof(playerMovement.ResetJump), playerMovement.GetJumpCoolDown());
+        }
+
+        //start crouch
+        if(Input.GetKeyDown(crouchKey))
+        {
+            Debug.Log("Perform Crouch Down!");
+            playerMovement.Crouch();
+            //ToDo: Re Implement Crouching
+            
+            /*
+            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+            */
+        }
+
+        //stop crouch
+        if(Input.GetKeyUp(crouchKey))
+        {
+            Debug.Log("Perform Crouch Up!");
+            playerMovement.Stand();
+            
+            //transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
     }
 
     public void MovePlayer()
@@ -94,65 +163,6 @@ public class PlayerMain : MonoBehaviour
         // turn gravity off while on slope
         
         //rb.useGravity = !OnSlope();
-    }
-
-    private void MyInput()
-    {
-
-        //when to jump
-        if(Input.GetKey(jumpKey) && playerMovement.GetReadyToJump() && playerMovement.canJumpCast )//&& playerMovement.canJumpCast playerMovement.GetGrounded()
-        {
-            playerMovement.SetReadyToJump(false);
-
-            playerMovement.Jump();
-
-            playerMovement.Invoke(nameof(playerMovement.ResetJump), playerMovement.GetJumpCoolDown());
-        }
-
-        //start crouch
-        if(Input.GetKeyDown(crouchKey))
-        {
-            Debug.Log("Perform Crouch Down!");
-            playerMovement.Crouch();
-            //ToDo: Re Implement Crouching
-            
-            /*
-            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-            */
-        }
-
-        //stop crouch
-        if(Input.GetKeyUp(crouchKey))
-        {
-            Debug.Log("Perform Crouch Up!");
-            playerMovement.Stand();
-            
-            //transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-        }
-    }
-
-    private void StateHandler()
-    {
-        //Mode - crouching
-        if(Input.GetKey(crouchKey))
-        {
-            state = PlayerState.crouching;
-        }
-        //Mode - walking
-        else if(playerMovement.GetGrounded())
-        {
-            state = PlayerState.walking;
-        }
-        //Mode - sprinting
-        if(playerMovement.GetGrounded() && Input.GetKey(sprintKey))
-        {
-            state = PlayerState.sprinting;
-        }
-        //Mode - Air
-        else
-        {
-            state = PlayerState.air;
-        }
     }
 
     
