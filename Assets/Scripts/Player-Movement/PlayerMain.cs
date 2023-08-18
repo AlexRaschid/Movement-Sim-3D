@@ -42,8 +42,11 @@ public class PlayerMain : MonoBehaviour
     
     void Update()
     {
+        //Best practice indicates to keep input data in update, which also includes the camera
+        horizontalInput = Input.GetAxisRaw("Horizontal"); //a+d
+        verticalInput = Input.GetAxisRaw("Vertical"); //w+s
         
-        MyInput();
+        
         StateHandler();
 
     }
@@ -53,6 +56,10 @@ public class PlayerMain : MonoBehaviour
     {
         playerMovement.ObeyGravity();
         MovePlayer();
+        //Standards indicate you track input in Update(),
+        //however in this case you are currently calculating playerMovement with Crouch, Jump, Stand
+        //so right now its alright, but seperate these to keep the convention
+        MyInput();
 
         if(playerMovement.sliding)
             playerSliding.SlidingMovement();
@@ -60,8 +67,7 @@ public class PlayerMain : MonoBehaviour
 
     public void MovePlayer()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal"); //a+d
-        verticalInput = Input.GetAxisRaw("Vertical"); //w+s
+        
         //calc movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
