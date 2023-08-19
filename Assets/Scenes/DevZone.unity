@@ -240,7 +240,7 @@ GameObject:
   - component: {fileID: 263805531}
   - component: {fileID: 263805530}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: InfoReport Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -262,8 +262,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 157, y: -200}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -432, y: 319}
+  m_SizeDelta: {x: 205.4933, y: 47.834}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &263805530
 MonoBehaviour:
@@ -285,7 +285,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Velocity:'
+  m_text: 'Velocity: -
+
+    State: -'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -312,14 +314,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 70.2
-  m_fontSizeBase: 70.2
+  m_fontSize: 54.99
+  m_fontSizeBase: 54.99
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -328,7 +330,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -1735,7 +1737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62711f40999014a4da5565b80f5be63c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocityTxt: {fileID: 263805530}
+  infoReport: {fileID: 263805530}
 --- !u!1 &1148016811
 GameObject:
   m_ObjectHideFlags: 0
