@@ -20,6 +20,8 @@ public class PlayerMain : MonoBehaviour
     Vector3 moveDirection;
     Rigidbody rb;
     
+    [Header("UI Manager")]
+    private UIManager uiManager;
 
     public PlayerState state;
     public enum PlayerState 
@@ -27,24 +29,35 @@ public class PlayerMain : MonoBehaviour
         standing,
         walking,
         jump,
-        crouching,
+        crouchingHold,
+        crouchingHoldInAir,
+        crouchingRelease,
+        crouchingHop,
         sliding,
         air
     }
-
 
     void Start()
     {
         rb = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
         playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
         playerSliding = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerSliding>();
-    }
+        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
-    
+        playerMovement.SetReadyToJump(true);
+        rb.useGravity = false; //we'll make our own!
+        /*Freezing rotation is not necessary, but highly recommended
+        if we're making a character rather than just some object
+        that happens to be on a slope.*/
+        rb.freezeRotation = true;
+    }
     void Update()
     {
+        uiManager.InfoReport(rb.velocity.magnitude.ToString(), state.ToString());
+
         playerMovement.SetCanJumpCast();
         StateHandler();
+        MyInput();
         //Best practice indicates to keep input data in update, which also includes the camera
         horizontalInput = Input.GetAxisRaw("Horizontal"); //a+d
         verticalInput = Input.GetAxisRaw("Vertical"); //w+s
@@ -52,18 +65,12 @@ public class PlayerMain : MonoBehaviour
         
 
     }
-
     //FixedUpdate should be used instead of Update when dealing with Rigidbody.
     void FixedUpdate()
     {
         playerMovement.ObeyGravity();
         MovePlayer();
-        MyInput();
-        //Standards indicate you track input in Update(),
-        //however in this case you are currently calculating playerMovement with Crouch, Jump, Stand
-        //so right now its alright, but seperate these to keep the convention
         
-
         if(playerMovement.sliding)
             playerSliding.SlidingMovement();
     }
@@ -74,16 +81,31 @@ public class PlayerMain : MonoBehaviour
         {
             state = PlayerState.standing;
         }
-        //Mode - Crouching
+        //Mode - CrouchingHold + Air
+        else if(Input.GetKey(crouchKey) && rb.velocity.y != 0)
+        {
+            state = PlayerState.crouchingHoldInAir;
+        }
+        //Mode - crouchingHop
+        else if(Input.GetKey(crouchKey) && Input.GetKeyDown(jumpKey))
+        {
+            state = PlayerState.crouchingHop;
+        }
+        //Mode - CrouchingHold
         else if(Input.GetKey(crouchKey))
         {
-            state = PlayerState.crouching;
+            state = PlayerState.crouchingHold;
         }
-        //Mode - Jumping
-        else if(Input.GetKey(jumpKey))
+        //Mode - CrouchingRelease
+        else if(Input.GetKeyUp(crouchKey))
+        {
+            state = PlayerState.crouchingRelease;
+        }
+        
+        //Mode - Jump
+        else if(Input.GetKey(jumpKey) && playerMovement.canJumpCast)
         {
             state = PlayerState.jump;
-            playerMovement.SetReadyToJump(true);
         }
         //Mode - Walking
         else if(playerMovement.GetGrounded() && rb.velocity.magnitude != 0)
@@ -101,7 +123,7 @@ public class PlayerMain : MonoBehaviour
     {
 
         //when to jump
-        if(state == PlayerState.jump && 
+        if(state == PlayerState.jump || state == PlayerState.crouchingHop || state == PlayerState.standing && //crouchJumping
             playerMovement.GetReadyToJump() && 
             playerMovement.canJumpCast )//&& playerMovement.canJumpCast playerMovement.GetGrounded()
         {
@@ -113,7 +135,7 @@ public class PlayerMain : MonoBehaviour
         }
 
         //start crouch
-        if(Input.GetKeyDown(crouchKey))
+        if(state == PlayerState.crouchingHold)
         {
             Debug.Log("Perform Crouch Down!");
             playerMovement.Crouch();
@@ -125,7 +147,7 @@ public class PlayerMain : MonoBehaviour
         }
 
         //stop crouch
-        if(Input.GetKeyUp(crouchKey))
+        if(state == PlayerState.crouchingRelease)
         {
             Debug.Log("Perform Crouch Up!");
             playerMovement.Stand();

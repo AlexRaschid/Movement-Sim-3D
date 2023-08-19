@@ -30,8 +30,7 @@ public class PlayerMovement : MonoBehaviour
     public float airControlForce;
     
 
-    [Header("UI Manager")]
-    private UIManager uiManager;
+    
 
     [Header("Gravity 2.0")]
     private bool grounded; // Handy to have for jumping, and we'll use it here too
@@ -52,24 +51,11 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
         //legs = GameObject.FindGameObjectWithTag("Player").GetComponent<CapsuleCollider>();
-        rb.useGravity = false; //we'll make our own!
-        /*Freezing rotation is not necessary, but highly recommended
-        if we're making a character rather than just some object
-        that happens to be on a slope.*/
-        rb.freezeRotation = true;
+        
 
 
-        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        readyToJump = false;
         
         startYScale = transform.localScale.y;
-    }
-
-    void FixedUpdate()
-    {
-        //Debug.Log(canJumpCast);
-        
-        uiManager.UpdateVelocityTxt(rb.velocity.magnitude.ToString("F3"));
     }
 
     void OnCollisionStay(Collision ourCollision)
@@ -214,8 +200,6 @@ public class PlayerMovement : MonoBehaviour
         rb.AddForce(groundNormal * Physics.gravity.magnitude*2, ForceMode.Force);
         transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         //stand up calculations
-        
-
     }
     public void Jump()
     {
@@ -226,7 +210,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void ResetJump()
     {
-        readyToJump = true;
+        readyToJump = true; //Leave true for auto bhop
 
         exitingSlope = false;
     }
