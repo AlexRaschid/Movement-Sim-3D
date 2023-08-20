@@ -76,83 +76,76 @@ public class PlayerMain : MonoBehaviour
     }
     private void StateHandler()
     {
-        //Mode - Standing
-        if(playerMovement.GetGrounded() && rb.velocity.magnitude == 0)
+        //Check if grounded or able to jump
+        if(playerMovement.GetGrounded() || playerMovement.canJumpCast)
         {
-            state = PlayerState.standing;
-        }
-        //Mode - CrouchingHold + Air
-        else if(Input.GetKey(crouchKey) && rb.velocity.y != 0)
-        {
-            state = PlayerState.crouchingHoldInAir;
-        }
-        //Mode - crouchingHop
-        else if(Input.GetKey(crouchKey) && Input.GetKeyDown(jumpKey))
-        {
-            state = PlayerState.crouchingHop;
-        }
-        //Mode - CrouchingHold
-        else if(Input.GetKey(crouchKey))
-        {
-            state = PlayerState.crouchingHold;
-        }
-        //Mode - CrouchingRelease
-        else if(Input.GetKeyUp(crouchKey))
-        {
-            state = PlayerState.crouchingRelease;
-        }
-        
-        //Mode - Jump
-        else if(Input.GetKey(jumpKey) && playerMovement.canJumpCast)
-        {
-            state = PlayerState.jump;
-        }
-        //Mode - Walking
-        else if(playerMovement.GetGrounded() && rb.velocity.magnitude != 0)
-        {
-            state = PlayerState.walking;
-        }
+            //Mode - CrouchingHold
+            if(Input.GetKey(crouchKey))
+            {
+                //Crouch + Jump
+                if(Input.GetKey(jumpKey))
+                {
+                    state = PlayerState.crouchingHop;
+                } 
+                else
+                {
+                    state = PlayerState.crouchingHold;
+                }  
+            }
+            ////Mode - CrouchingRelease
+            else if(Input.GetKeyUp(crouchKey))
+            {
+                state = PlayerState.crouchingRelease;
+            }
+            //Mode - Jump
+            else if(Input.GetKey(jumpKey))
+            {
+                state = PlayerState.jump;
+            }
+            //Mode - Standing (idle)
+            else if(Mathf.Round(rb.velocity.magnitude) == 0)
+            {
+                state = PlayerState.standing;
+            }
+            //Mode - Walking
+            else if(rb.velocity.magnitude != 0)
+            {
+                state = PlayerState.walking;
+            }
+        } 
         //Mode - Air
         else
         {
             state = PlayerState.air;
         }
+
+        //why did i make this one?
+        /*
+        //Mode - CrouchingHold + Air
+        else if(Input.GetKey(crouchKey) && rb.velocity.y != 0)
+        {
+            state = PlayerState.crouchingHoldInAir;
+        }
+        */  
     }
 
     private void MyInput()
     {
-
-        //when to jump
-        if(state == PlayerState.jump || state == PlayerState.crouchingHop || state == PlayerState.standing && //crouchJumping
-            playerMovement.GetReadyToJump() && 
-            playerMovement.canJumpCast )//&& playerMovement.canJumpCast playerMovement.GetGrounded()
+        switch(state)
         {
-            playerMovement.SetReadyToJump(false);
-
-            playerMovement.Jump();
-
-            playerMovement.Invoke(nameof(playerMovement.ResetJump), playerMovement.GetJumpCoolDown());
-        }
-
-        //start crouch
-        if(state == PlayerState.crouchingHold)
-        {
-            Debug.Log("Perform Crouch Down!");
-            playerMovement.Crouch();
-            //ToDo: Re Implement Crouching
-            
-            /*
-            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
-            */
-        }
-
-        //stop crouch
-        if(state == PlayerState.crouchingRelease)
-        {
-            Debug.Log("Perform Crouch Up!");
-            playerMovement.Stand();
-            
-            //transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+            //Check for Jump
+            case PlayerState.jump:
+            case PlayerState.crouchingHop:
+                playerMovement.SetReadyToJump(false);
+                playerMovement.Jump();
+                playerMovement.Invoke(nameof(playerMovement.ResetJump), playerMovement.GetJumpCoolDown());
+                break;
+            case PlayerState.crouchingHold:
+                playerMovement.Crouch();
+                break;
+            case PlayerState.crouchingRelease:
+                playerMovement.Stand();
+                break;      
         }
     }
 
