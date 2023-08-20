@@ -107,10 +107,10 @@ public class PlayerMovement : MonoBehaviour
             This means whatever surface we're grounded on will be 
             effectively the same as standing on a perfectly horizontal 
             surface. Ergo, no sliding will occur. */
-            Debug.Log(currentGravity);
-            Debug.Log(-groundNormal);
-            Debug.Log(Physics.gravity.magnitude);
-            Debug.Log(-groundNormal * Physics.gravity.magnitude);
+            //Debug.Log(currentGravity);
+            //Debug.Log(-groundNormal);
+            //Debug.Log(Physics.gravity.magnitude);
+            //Debug.Log(-groundNormal * Physics.gravity.magnitude);
 
             currentGravity = -groundNormal * Physics.gravity.magnitude;
         }
