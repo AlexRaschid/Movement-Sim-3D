@@ -41,7 +41,7 @@ public class PlayerMovementStateManager : MonoBehaviour
 
 
         playerMovement.SetReadyToJump(true);
-        rb.useGravity = false; //we'll make our own!
+        //rb.useGravity = false; //we'll make our own!
         /*Freezing rotation is not necessary, but highly recommended
         if we're making a character rather than just some object
         that happens to be on a slope.*/
