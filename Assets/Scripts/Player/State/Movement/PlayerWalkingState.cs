@@ -15,7 +15,7 @@ public class PlayerWalkingState : PlayerBaseState
         {
             player.SwitchState(player.stillState);
         }
-        else if(Input.GetKey(player.jumpKey) && player.playerMovement.canJumpCast)
+        else if(Input.GetKey(player.jumpKey) )//&& player.playerMovement.canJumpCast*
         {
             player.SwitchState(player.jumpState);
         }

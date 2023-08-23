@@ -28,9 +28,6 @@ public class PlayerMovement : MonoBehaviour
     public float air_accelerate;
     public float max_velocity_air;
     public float airControlForce;
-    
-
-    
 
     [Header("Gravity 2.0")]
     private bool grounded; // Handy to have for jumping, and we'll use it here too
@@ -40,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     public float maxSlopeAngle; //The steepest you want the character to be able to stand firmly on. Steeper than this and they'll slide.
     Rigidbody rb;
     public bool canJumpCast;
+    //public float gravitationalConstant = 9.81f;
     //Note: The loss in momentum when bhopping may be due from the rigid body
     // making contact with the ground. Perhaps using a normal collider 
     // and placing it slightly below the capsule will help smoothen this out.
@@ -52,8 +50,6 @@ public class PlayerMovement : MonoBehaviour
         rb = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
         //legs = GameObject.FindGameObjectWithTag("Player").GetComponent<CapsuleCollider>();
         
-
-
         
         startYScale = transform.localScale.y;
     }
@@ -72,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
         grounded = false;
         groundNormal = new Vector3(); //Probably not necessary, but a good habit, in my opinion
     }
-    bool CheckGrounded(Collision newCol)
+    bool CheckGrounded(Collision newCol) 
     {
         cPoints = new ContactPoint[newCol.contactCount];
         newCol.GetContacts(cPoints);

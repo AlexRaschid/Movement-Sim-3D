@@ -20,7 +20,7 @@ public class PlayerMovementStateManager : MonoBehaviour
     public float verticalInput;
 
     [Header("Movement Logic")]
-    public PlayerMovement playerMovement;
+    public BunnyHopRigidbody playerMovement;
     public Transform orientation;
     public Vector3 moveDirection;
     public Rigidbody rb;
@@ -36,27 +36,32 @@ public class PlayerMovementStateManager : MonoBehaviour
 
 
         rb = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
-        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovement>();
+        playerMovement = GameObject.FindGameObjectWithTag("Player").GetComponent<BunnyHopRigidbody>();
         uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
 
 
-        playerMovement.SetReadyToJump(true);
+        //playerMovement.SetReadyToJump(true);
         //rb.useGravity = false; //we'll make our own!
         /*Freezing rotation is not necessary, but highly recommended
         if we're making a character rather than just some object
         that happens to be on a slope.*/
-        rb.freezeRotation = true;
+        //rb.freezeRotation = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        uiManager.InfoReport(rb.velocity.magnitude.ToString(), currentState.ToString());
+        uiManager.InfoReport(playerMovement.velocity.magnitude.ToString(), currentState.ToString());
 
         //Best practice indicates to keep input data in update, which also includes the camera
         horizontalInput = Input.GetAxisRaw("Horizontal"); //a+d
         verticalInput = Input.GetAxisRaw("Vertical"); //w+s
-        playerMovement.SetCanJumpCast();
+        //playerMovement.SetCanJumpCast();
+
+        playerMovement.GetIsGrounded();
+
+        moveDirection = (transform.forward * Input.GetAxis("Vertical") +
+                         transform.right * Input.GetAxis("Horizontal")).normalized;
 
 
         currentState.UpdateState(this);
@@ -65,7 +70,17 @@ public class PlayerMovementStateManager : MonoBehaviour
     void FixedUpdate()
     {
         
-        playerMovement.ObeyGravity();
+        //playerMovement.ObeyGravity();
+        playerMovement.SimulatePhysics();
+
+/*
+        // Update velocity with external forces
+        Vector3 externalForces = Vector3.zero; // Calculate any external forces here
+        playerMovement.velocity += externalForces * Time.fixedDeltaTime;
+*/
+        // Apply velocity change
+        rb.MovePosition(rb.position + playerMovement.velocity * Time.fixedDeltaTime);
+
         MovePlayer();
     }
 
@@ -77,6 +92,49 @@ public class PlayerMovementStateManager : MonoBehaviour
         state.EnterState(this);
     }
 
+    public void MovePlayer()
+    {
+
+        if (currentState == airState)
+        {
+            //playerMovement.ApplyCustomGravity();
+            playerMovement.AirStrafe(moveDirection, playerMovement.moveSpeed);
+        }
+
+        playerMovement.SetOnSlope();
+
+        if (playerMovement.GetOnSlope())
+        {
+            playerMovement.ApplySlopeGravity(playerMovement.slopeNormal);
+        }
+
+        // Apply friction when on ground
+        if (playerMovement.GetIsGrounded())
+        {
+            Vector3 frictionForce = -playerMovement.velocity.normalized * playerMovement.groundFriction * Time.fixedDeltaTime;
+            playerMovement.velocity += frictionForce;
+        }
+
+
+        /*
+        else
+        {
+            onSlope = playerMovement.CheckSlope(out slopeNormal);
+
+            // Apply slope gravity adjustment
+            if (onSlope)
+            {
+                ApplySlopeGravity(slopeNormal);
+                MoveOnGround(moveDirection, moveSpeed, groundFriction);
+            }
+            else
+            {
+                MoveOnGround(moveDirection, moveSpeed, groundFriction);
+            }
+        }
+        */
+    }
+    /*
     public void MovePlayer()
     {
         //Debug.Log(currentState == jumpState);
@@ -111,4 +169,5 @@ public class PlayerMovementStateManager : MonoBehaviour
         else if(!playerMovement.GetGrounded())
             playerMovement.MoveAir(moveDirection, rb.velocity);
     }
+    */
 }

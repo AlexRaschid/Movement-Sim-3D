@@ -4,18 +4,18 @@ public class PlayerStillState : PlayerBaseState
 {
     public override void EnterState(PlayerMovementStateManager player)
     {
-        Debug.Log("Hello this is zoidberg from PlayerStillState!Movement");
+        Debug.Log("Hello this is zoidberg from PlayerStillState!");
     }
 
     public override void UpdateState(PlayerMovementStateManager player)
     {
-
-        if(Mathf.Round(player.moveDirection.magnitude) != 0 
-            || Mathf.Round(player.rb.velocity.magnitude) != 0)
+        Debug.Log(player.playerMovement.GetIsGrounded());
+        Debug.Log(Input.GetKey(player.jumpKey));
+        if(!player.playerMovement.GetIsGrounded())
         {
-            player.SwitchState(player.walkingState);
-        } 
-        else if(Input.GetKey(player.jumpKey) && player.playerMovement.canJumpCast)
+            player.SwitchState(player.airState);
+        }
+        if (player.playerMovement.GetIsGrounded() && Input.GetKeyDown(player.jumpKey))
         {
             player.SwitchState(player.jumpState);
         }

@@ -791,6 +791,7 @@ GameObject:
   - component: {fileID: 699716828}
   - component: {fileID: 699716827}
   - component: {fileID: 699716826}
+  - component: {fileID: 699716829}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -834,7 +835,7 @@ Transform:
   m_GameObject: {fileID: 699716819}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.09, z: -12.45}
+  m_LocalPosition: {x: 0, y: 1.6, z: -12.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -850,7 +851,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699716819}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 217ec4e605fff354ea7a9db573021def, type: 3}
   m_Name: 
@@ -868,7 +869,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 699716819}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42a111f36a2f86f449fbae33937c3f96, type: 3}
   m_Name: 
@@ -908,10 +909,35 @@ MonoBehaviour:
   crouchKey: 99
   horizontalInput: 0
   verticalInput: 0
-  playerMovement: {fileID: 699716827}
+  playerMovement: {fileID: 699716829}
   orientation: {fileID: 660643107}
   moveDirection: {x: 0, y: 0, z: 0}
   rb: {fileID: 699716820}
+--- !u!114 &699716829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 699716819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf74f2012e16e06418475ffdb452c967, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 5
+  moveSpeed: 5
+  maxVelocityChange: 10
+  groundFriction: 5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  groundCheckTransform: {fileID: 660643107}
+  groundCheckRadius: 0.1
+  customGravity: 20
+  slopeForce: 10
+  slopeNormal: {x: 0, y: 0, z: 0}
+  moveDirection: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
