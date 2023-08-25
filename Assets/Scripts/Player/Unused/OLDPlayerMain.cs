@@ -1,4 +1,4 @@
-using System.Collections;
+/*  using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -48,7 +48,7 @@ public class PlayerMain : MonoBehaviour
         rb.useGravity = false; //we'll make our own!
         /*Freezing rotation is not necessary, but highly recommended
         if we're making a character rather than just some object
-        that happens to be on a slope.*/
+        that happens to be on a slope.8/
         rb.freezeRotation = true;
     }
     void Update()
@@ -126,7 +126,7 @@ public class PlayerMain : MonoBehaviour
         {
             state = PlayerState.crouchingHoldInAir;
         }
-        */  
+        8/  
     }
 
     private void MyInput()
@@ -183,3 +183,5 @@ public class PlayerMain : MonoBehaviour
     
 
 }
+
+*/

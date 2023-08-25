@@ -8,8 +8,8 @@ public class PlayerSliding : MonoBehaviour
         public Transform orientation;
         public Transform playerObj;
         private Rigidbody rb;
-        private PlayerMain pm;
-        private PlayerMovement qm;
+        //private PlayerMain pm;
+        private DynamicPlayerMovement qm;
         
     [Header("References")]
     public float maxSlideTime;
@@ -28,8 +28,8 @@ public class PlayerSliding : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        pm = GetComponent<PlayerMain>();
-        qm = GetComponent<PlayerMovement>();
+        //pm = GetComponent<PlayerMain>();
+        qm = GetComponent<DynamicPlayerMovement>();
 
         startYScale = playerObj.localScale.y;
     }
@@ -59,11 +59,11 @@ public class PlayerSliding : MonoBehaviour
         qm.sliding = true;
 
 
-        if(!Input.GetKey(pm.crouchKey))
+        /*if(!Input.GetKey(pm.crouchKey))
         {
             transform.localScale = new Vector3(playerObj.localScale.x, qm.crouchYScale, playerObj.localScale.z);
             rb.AddForce(Vector3.down * 10f, ForceMode.Impulse);  
-        }
+        }*/
             
 
         slideTimer = maxSlideTime;
