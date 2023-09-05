@@ -5,7 +5,7 @@ using TMPro;
 public class DynamicPlayerMovement : MonoBehaviour
 {
     [Header("Jumping")]
-    public float jumpForce;
+    public float jumpForce; // set to 9.81
     public float jumpCooldown;
     public float airMultiplier;
     private bool readyToJump;
@@ -201,7 +201,8 @@ public class DynamicPlayerMovement : MonoBehaviour
     {
         exitingSlope = true;
         //reset y velocity to 0 to jjump at same height
-            rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+        //jumpforce/2 is the same as Physics.gravity/2 and 9.81/2
+        rb.velocity = new Vector3(rb.velocity.x, jumpForce/2, rb.velocity.z);
     }
 
     public void ResetJump()
@@ -227,6 +228,11 @@ public class DynamicPlayerMovement : MonoBehaviour
     public void SetCanJumpCast()
     {
         canJumpCast = Physics.CheckSphere(transform.position - new Vector3(0,playerHeight/2,0) , 0.2f, whatIsGround);
+    }
+
+    public bool GetCanJumpCast()
+    {
+        return canJumpCast;
     }
     
     public Vector3 GetSlopeMoveDirection(Vector3 direction)

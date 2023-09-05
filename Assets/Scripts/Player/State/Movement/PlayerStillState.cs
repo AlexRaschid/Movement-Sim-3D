@@ -15,7 +15,7 @@ public class PlayerStillState : PlayerBaseState
         {
             player.SwitchState(player.airState);
         }
-        if (player.playerMovement.GetGrounded() && Input.GetKeyDown(player.jumpKey))
+        if (player.playerMovement.GetGrounded() && Input.GetKey(player.jumpKey))
         {
             player.SwitchState(player.jumpState);
         }

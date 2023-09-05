@@ -20,6 +20,9 @@ public class PlayerAirState : PlayerBaseState
         if(player.playerMovement.GetGrounded())
         {
             player.SwitchState(player.stillState);
+        } else if(player.playerMovement.GetCanJumpCast() && Input.GetKey(player.jumpKey))
+        {
+            player.SwitchState(player.jumpState);
         }
     }
 
