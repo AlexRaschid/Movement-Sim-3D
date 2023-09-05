@@ -9,13 +9,13 @@ public class PlayerStillState : PlayerBaseState
 
     public override void UpdateState(PlayerMovementStateManager player)
     {
-        Debug.Log(player.playerMovement.GetIsGrounded());
-        Debug.Log(Input.GetKey(player.jumpKey));
-        if(!player.playerMovement.GetIsGrounded())
+        //Debug.Log(player.playerMovement.GetGrounded());
+        //Debug.Log(Input.GetKey(player.jumpKey));
+        if(!player.playerMovement.GetGrounded())
         {
             player.SwitchState(player.airState);
         }
-        if (player.playerMovement.GetIsGrounded() && Input.GetKeyDown(player.jumpKey))
+        if (player.playerMovement.GetGrounded() && Input.GetKeyDown(player.jumpKey))
         {
             player.SwitchState(player.jumpState);
         }

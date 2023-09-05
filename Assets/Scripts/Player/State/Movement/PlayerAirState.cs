@@ -17,7 +17,7 @@ public class PlayerAirState : PlayerBaseState
 
         //Debug.Log(player.playerMovement.GetIsGrounded());
 
-        if(player.playerMovement.GetIsGrounded())
+        if(player.playerMovement.GetGrounded())
         {
             player.SwitchState(player.stillState);
         }
