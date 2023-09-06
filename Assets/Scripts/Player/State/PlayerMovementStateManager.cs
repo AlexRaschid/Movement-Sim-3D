@@ -91,7 +91,7 @@ public class PlayerMovementStateManager : MonoBehaviour
             playerMovement.OnSlope() && !playerMovement.GetExitingSlope())
         {
             
-            rb.velocity = playerMovement.MoveGround(playerMovement.GetSlopeMoveDirection(moveDirection), rb.velocity);
+            playerMovement.MoveGround(playerMovement.GetSlopeMoveDirection(moveDirection), rb.velocity);
             
         }
 
@@ -99,7 +99,7 @@ public class PlayerMovementStateManager : MonoBehaviour
         else if(currentState == walkingState 
                 && playerMovement.GetGrounded())
         {
-            rb.velocity = playerMovement.MoveGround(moveDirection, rb.velocity);
+            playerMovement.MoveGround(moveDirection, rb.velocity);
         }//perform Jump
         else if(currentState == jumpState)
         {

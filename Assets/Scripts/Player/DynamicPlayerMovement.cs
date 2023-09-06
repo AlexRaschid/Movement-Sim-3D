@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 public class DynamicPlayerMovement : MonoBehaviour
 {
     [Header("Jumping")]
@@ -117,7 +118,7 @@ public class DynamicPlayerMovement : MonoBehaviour
     // prevVelocity: The current velocity of the player, before any additional calculations
     // accelerate: The server-defined player acceleration value
     // max_velocity: The server-defined maximum player velocity (this is not strictly adhered to due to strafejumping)
-    public Vector3 MoveGround(Vector3 accelDir, Vector3 prevVelocity)
+    public void MoveGround(Vector3 accelDir, Vector3 prevVelocity)
     {
         accelDir = accelDir.normalized;
         // Apply Friction
@@ -130,12 +131,12 @@ public class DynamicPlayerMovement : MonoBehaviour
         }
 
         // ground_accelerate and max_velocity_ground are server-defined movement variables
-        return Accelerate(accelDir, prevVelocity, ground_accelerate, max_velocity_ground);
+        Accelerate(accelDir, prevVelocity, ground_accelerate, max_velocity_ground);
     }
 
     //TODO: Unoptimized Acceleration calculations, currently doing it seperately: for ground and air. 
     // Unite these for better readability/performance
-    private Vector3 Accelerate(Vector3 accelDir, Vector3 prevVelocity, float accelerate, float max_velocity)
+    private void Accelerate(Vector3 accelDir, Vector3 prevVelocity, float accelerate, float max_velocity)
     {
         //Debug.Log(prevVelocity);
         float projVel = Vector3.Dot(prevVelocity, accelDir); // Vector projection of Current velocity onto accelDir.
@@ -149,9 +150,10 @@ public class DynamicPlayerMovement : MonoBehaviour
             //accelVel = accelVel * //Mathf.FloorToInt(accelVel);
         }
             //accelVel = max_velocity - projVel;
-
         
-        return prevVelocity + accelDir * accelVel;
+        Vector3 newMoveSpeed = prevVelocity + accelDir * accelVel;
+        
+        rb.AddForce(new Vector3(newMoveSpeed.x, transform.position.y, newMoveSpeed.z), ForceMode.Force);
     }
 
 
