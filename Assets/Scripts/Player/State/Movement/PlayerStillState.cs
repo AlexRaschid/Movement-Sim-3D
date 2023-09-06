@@ -15,9 +15,14 @@ public class PlayerStillState : PlayerBaseState
         {
             player.SwitchState(player.airState);
         }
-        if (player.playerMovement.GetGrounded() && Input.GetKey(player.jumpKey))
+        else if (player.playerMovement.GetGrounded() && Input.GetKey(player.jumpKey))
         {
             player.SwitchState(player.jumpState);
+        }
+
+        if(player.moveDirection.x != 0 || player.moveDirection.y != 0)
+        {
+            player.SwitchState(player.walkingState);
         }
     }
 

@@ -11,7 +11,7 @@ public class PlayerWalkingState : PlayerBaseState
     public override void UpdateState(PlayerMovementStateManager player)
     {
 
-        if(Mathf.Round(player.rb.velocity.magnitude) == 0)
+        if(player.moveDirection.x == 0 && player.moveDirection.y == 0)
         {
             player.SwitchState(player.stillState);
         }
