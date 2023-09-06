@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
 public class DynamicPlayerMovement : MonoBehaviour
 {
     [Header("Jumping")]
@@ -131,12 +130,15 @@ public class DynamicPlayerMovement : MonoBehaviour
         }
 
         // ground_accelerate and max_velocity_ground are server-defined movement variables
-        Accelerate(accelDir, prevVelocity, ground_accelerate, max_velocity_ground);
+        Vector3 newMoveSpeed = Accelerate(accelDir, prevVelocity, ground_accelerate, max_velocity_ground);
+
+        //TODO: SOMETHING HERE 9/6/2023, code here affect movement ground. 
+        rb.AddForce(newMoveSpeed, ForceMode.VelocityChange);
     }
 
     //TODO: Unoptimized Acceleration calculations, currently doing it seperately: for ground and air. 
     // Unite these for better readability/performance
-    private void Accelerate(Vector3 accelDir, Vector3 prevVelocity, float accelerate, float max_velocity)
+    private Vector3 Accelerate(Vector3 accelDir, Vector3 prevVelocity, float accelerate, float max_velocity)
     {
         //Debug.Log(prevVelocity);
         float projVel = Vector3.Dot(prevVelocity, accelDir); // Vector projection of Current velocity onto accelDir.
@@ -150,10 +152,9 @@ public class DynamicPlayerMovement : MonoBehaviour
             //accelVel = accelVel * //Mathf.FloorToInt(accelVel);
         }
             //accelVel = max_velocity - projVel;
+
         
-        Vector3 newMoveSpeed = prevVelocity + accelDir * accelVel;
-        
-        rb.AddForce(new Vector3(newMoveSpeed.x, transform.position.y, newMoveSpeed.z), ForceMode.Force);
+        return prevVelocity + accelDir * accelVel;
     }
 
 
